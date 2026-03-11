@@ -1,8 +1,6 @@
 # Overview
 
-A commit in a git repository records a snapshot of all the files in your directory. It's like a giant copy and paste, but even better!
-
-Git wants to keep commits as lightweight as possible though, so it doesn't just blindly copy the entire directory every time you commit. It can (when possible) compress a commit as a set of changes, or a "delta", from one version of the repository to the next.
+Git is a "database". A commit is a "record" i.e. a snapshot of all the files in your directory.
 
 # Config
 
@@ -15,7 +13,7 @@ git init
 Each repo has its own configurations. You can see them with:
 
 ```bash
-git config --list
+git config -l
 ```
 
 Here are the essential configurations you need to add:
@@ -34,6 +32,21 @@ When doing `git push`, this gets the password from the `.git-credentials` file, 
 git config credential.helper store
 ```
 
+# Terminal branch
+
+Show current branch name in terminal.
+
+```bash
+sudo apt install git bash-completion
+
+# Add this inside `~/.bashrc`.
+source /etc/bash_completion.d/git-prompt
+export PS1='\u@\h:\w$(__git_ps1 " (%s)")\$ '
+
+# Reload settings
+source ~/.bashrc
+```
+
 # Global
 
 ```bash
@@ -50,33 +63,9 @@ git config --global credential.helper store
 git config --global credential.useHttpPath true
 ```
 
-# Feature branches vs Trunk-based development
+# Simple git branching model
 
-Feature branches i.e. Main is deployed.
-
-![](../pics/git/git_feature1.png)
-
-![](../pics/git/git_feature2.jpg)
-
-Trunk-based i.e. Branches are deployed.
-
-![](../pics/git/git_trunk1a.png)
-
-![](../pics/git/git_trunk1b.png)
-
-![](../pics/git/git_trunk2.jpg)
-
-# Rules
-
-1. Create a Git repository for every new project.
-2. Create a new branch for every new feature.
-3. Use Pull Requests to merge code to Master.
-
-![Git Workflow](../pics/git/git_workflow.jpg)
-
-[Source 1](https://www.freecodecamp.org/news/follow-these-simple-rules-and-youll-become-a-git-and-github-master-e1045057468f/)
-[Source 2](https://www.freecodecamp.org/news/how-to-use-git-efficiently-54320a236369/)
-[Source 3](https://pathof.dev/blog/making-sense-of-git-and-github)
+https://gist.github.com/chalasr/fd195d83a0a01e4291a8
 
 # Git Workflow
 
@@ -105,7 +94,9 @@ Github repo > Clone to local > Push to Github > Pull changes to server
 
 # Tips
 
-Master branch = Timeline
+`master` = Main timeline branch
+
+`origin` = alias for REPO_NAME.
 
 `HEAD` = Last commit on current branch.
 
@@ -176,12 +167,22 @@ git help
 git help COMMAND
 ```
 
-# Diff (See Changes)
+# History
 
 ```bash
 # Commit history.
 git log
 
+# A visual tree with branch names included.
+git log --oneline --decorate --all --graph
+
+# Add the "tree" alias as a shortcut.
+git config --global alias.tree "log --oneline --decorate --all --graph"
+```
+
+# Diff (See Changes)
+
+```bash
 # files in a commit
 git show --name-only <commit_hash>
 
@@ -193,12 +194,6 @@ git diff --staged
 
 # Show differences between current and specific commit.
 git diff HASH
-
-# A visual tree with branch names included.
-git log --oneline --decorate --all --graph
-
-# Add the "tree" alias as a shortcut.
-git config --global alias.tree "log --oneline --decorate --all --graph"
 ```
 
 # Staging
@@ -367,6 +362,10 @@ git push <repo_name> --delete <branch_name>
 
 ## Merge
 
+![Git merge](../pics/git/git_merge.png)
+
+**Merge creates a cimmit with two parents.**
+
 **The merging is done from the perspective of where we merge `INTO`.**
 
 Merging in Git creates a special commit that has two unique parents. A commit with two parents essentially means "I want to include all the work from this parent over here and this one over here, and the set of all their parents."
@@ -392,6 +391,10 @@ If both branches were modified, a commit is created to do the merge. (Vi editor 
 ```
 
 ## Rebase
+
+![Git rebase](../pics/git/git_rebase.png)
+
+**"Replay" your commits on top of main.**
 
 **The "merging" is done from the perspective of where we merge `FROM`.**
 
@@ -491,9 +494,9 @@ Once a pull request is accepted, the actual act of publishing a feature is much 
 
 Cloning does:
 
--   Download entire repo into a new local one.
--   Add "origin" remote, pointing to the clone URL.
--   Check out initial branch. (Set head to master)
+- Download entire repo into a new local one.
+- Add "origin" remote, pointing to the clone URL.
+- Check out initial branch. (Set head to master)
 
 # Example Workflows
 
@@ -551,6 +554,34 @@ What the timeline (master) looks like. \* = commit.
 |/
 *    - Last commit before branch
 ```
+
+# Trunk-based development vs Feature branches
+
+**Trunk-based i.e. Branches are deployed.**
+
+![](../pics/git/git_trunk1a.png)
+
+![](../pics/git/git_trunk1b.png)
+
+![](../pics/git/git_trunk2.jpg)
+
+**Feature branches i.e. Main is deployed.**
+
+![](../pics/git/git_feature1.png)
+
+![](../pics/git/git_feature2.jpg)
+
+# Rules
+
+1. Create a Git repository for every new project.
+2. Create a new branch for every new feature.
+3. Use Pull Requests to merge code to Master.
+
+![Git Workflow](../pics/git/git_workflow.jpg)
+
+[Source 1](https://www.freecodecamp.org/news/follow-these-simple-rules-and-youll-become-a-git-and-github-master-e1045057468f/)
+[Source 2](https://www.freecodecamp.org/news/how-to-use-git-efficiently-54320a236369/)
+[Source 3](https://pathof.dev/blog/making-sense-of-git-and-github)
 
 # Useful
 

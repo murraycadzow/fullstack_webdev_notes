@@ -58,6 +58,9 @@ sudo service nginx start
 **Wildcard**
 
 ```bash
+sudo certbot certonly --manual --preferred-challenges dns -d domain.com -d '*.domain.com'
+
+# Alternative
 sudo certbot certonly --manual --preferred-challenges=dns --server https://acme-v02.api.letsencrypt.org/directory --agree-tos -d *.domain.com
 ```
 
@@ -205,5 +208,5 @@ Windows ACME Simple (WACS)
 
 https://github.com/win-acme/win-acme
 
--   Run `wacs.exe` as administrator
--   Follow guide
+- Run `wacs.exe` as administrator
+- Follow guide
